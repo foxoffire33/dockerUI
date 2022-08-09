@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+  DeLaParra\DockerBundle\DependencyInjection\Configuration: ~
+  DeLaParra\DockerBundle\Services\ImageService:
+    arguments:
+      -  $connection: '@docker.connect'
+  docker.connect:
+    synthetic: true

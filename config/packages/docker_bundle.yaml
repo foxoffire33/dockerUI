@@ -1,0 +1,9 @@
+docker:
+  driver: socket
+  http_connection:
+    hostname: localhost
+    port: 10000
+    publicKeyFile: ''
+    privateKeyFile: ''
+  socket_connection:
+    socket: ''
