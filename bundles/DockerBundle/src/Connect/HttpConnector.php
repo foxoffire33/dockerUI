@@ -2,23 +2,27 @@
 
 namespace DeLaParra\DockerBundle\Connect;
 
-
-use DeLaParra\DockerBundle\DependencyInjection\Configuration;
-use const http\Client\Curl\Versions\CURL;
+use Symfony\Component\HttpClient\Exception\ClientException;
+use Symfony\Component\HttpClient\Exception\ServerException;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class HttpConnector implements ConnectorInterface
 {
 
-    private $connection;
+    private HttpClientInterface $client;
+    private array $connection;
 
     public function __construct(array $connection)
     {
-        var_dump($connection);
+        $this->client = HttpClient::create();
+        $this->connection = $connection;
     }
 
-    public function get()
+    public function get(string $path): array
     {
-        // TODO: Implement get() method.
+        return $this->request('GET', $path);
     }
 
     public function getVerion()
@@ -31,9 +35,9 @@ class HttpConnector implements ConnectorInterface
         // TODO: Implement getInfo() method.
     }
 
-    public function post()
+    public function post(string $path, array $data)
     {
-        // TODO: Implement post() method.
+        return $this->request('POST', $path);
     }
 
     public function delete()
@@ -41,8 +45,21 @@ class HttpConnector implements ConnectorInterface
         // TODO: Implement delete() method.
     }
 
-    public function getClient()
+    private function request(string $method, string $path)
     {
-        // TODO: Implement getClient() method.
+        try {
+            return $this->client->request($method, $this->getBasePath() . $path)->toArray();
+        } catch (ClientException $exception) {
+            $message = $exception->getResponse()->toArray();
+        } catch (ServerException $exception) {
+            dd($exception->getMessage());
+        } catch (TransportExceptionInterface $exception) {
+            dd($exception->getMessage());
+        }
+    }
+
+    private function getBasePath(): string
+    {
+        return 'http://' . $this->connection['host'] . ':' . $this->connection['port'] . '/v' . $this->connection['version'] . '/';
     }
 }

@@ -1,1 +1,10 @@
-docker_bundle:
+docker:
+  driver: http
+  APIVersion: 1.41
+  http_connection:
+    host: 192.168.1.218
+    port: 2375
+    publicKeyFile: ''
+    privateKeyFile: ''
+  socket_connection:
+    socket: ''

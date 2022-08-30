@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use DeLaParra\DockerBundle\Services\ImageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,9 +16,9 @@ class ImageController extends AbstractController
         name: 'container_index',
         methods: ['GET'])
     ]
-    public function index(ImageService $service): Response
+    public function index(ImageService $service): JsonResponse
     {
-        return new Response('',200);
+        return new JsonResponse($service->all(), 200);
     }
 
     #[Route('/container/create',
@@ -85,6 +86,13 @@ class ImageController extends AbstractController
     public function stop(string $id)
     {
 
+    }
+
+    #[Route('image/pull', methods: ['POST'])]
+    public function pull(Request $request, ImageService $imageService): JsonResponse
+    {
+        $imageName = $request->request->get('name');
+        return new JsonResponse($imageService->pull($imageName), 200);
     }
 
 }

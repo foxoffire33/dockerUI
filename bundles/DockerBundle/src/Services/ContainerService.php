@@ -3,11 +3,17 @@
 namespace DeLaParra\DockerBundle\Services;
 
 use DeLaParra\DockerBundle\DependencyInjection\Configuration;
+use DeLaParra\DockerBundle\Entity\Image;
 
 class ContainerService
 {
-    public function __construct(Configuration $configuration)
+    private function __construct(Configuration $configuration)
     {
 
+    }
+
+    public static function createPullRequest($name)
+    {
+        $image = new Image();
     }
 }

@@ -17,9 +17,11 @@ class DockerBundle extends Bundle
         $driver = $this->container->getParameter('docker.driver');
         if($driver === 'http'){
             $connection = $this->container->getParameter('docker.http_connection');
+            $connection['version'] = $this->container->getParameter('docker.APIVersion');
             $connectionClass = new HttpConnector($connection);
         }else{
             $connection = $this->container->getParameter('docker.socket_connection');
+            $connection['version'] = $this->container->getParameter('docker.APIVersion');
             $connectionClass = new SocketConnector($connection);
         }
 

@@ -1,8 +1,9 @@
 docker:
-  driver: socket
+  driver: http
+  APIVersion: 1.41
   http_connection:
-    hostname: localhost
-    port: 10000
+    host: 192.168.1.218
+    port: 2375
     publicKeyFile: ''
     privateKeyFile: ''
   socket_connection:
