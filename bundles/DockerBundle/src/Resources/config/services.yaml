@@ -9,3 +9,6 @@ services:
   DeLaParra\DockerBundle\Services\ImageService:
     arguments:
       - '@docker.connect'
+  DeLaParra\DockerBundle\Services\ContainerService:
+    arguments:
+      - '@docker.connect'

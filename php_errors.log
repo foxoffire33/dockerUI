@@ -16,3 +16,4 @@
 [08-Aug-2022 11:29:33 UTC] 2022-08-08T11:29:33+00:00 [critical] Uncaught Error: Class "DeLaParra\DockerBundle\DockerBundle" not found
 [30-Aug-2022 17:36:01 UTC] 2022-08-30T17:36:01+00:00 [info] User Deprecated: The "Monolog\Logger" class is considered final. It may change without further notice as of its next major version. You should not extend it from "Symfony\Bridge\Monolog\Logger".
 [30-Aug-2022 18:07:25 UTC] 2022-08-30T18:07:25+00:00 [critical] Uncaught Error: syntax error, unexpected token ")", expecting variable
+[31-Aug-2022 09:55:55 UTC] 2022-08-31T09:55:55+00:00 [critical] Uncaught Error: syntax error, unexpected token "->"

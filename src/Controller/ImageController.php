@@ -2,7 +2,12 @@
 
 namespace App\Controller;
 
+use App\Form\PullImageFormType;
+use App\Form\PullImageType;
+use DeLaParra\DockerBundle\Entity\BuildImage;
+use DeLaParra\DockerBundle\Entity\CreateImage;
 use DeLaParra\DockerBundle\Services\ImageService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,12 +18,16 @@ class ImageController extends AbstractController
 {
 
     #[Route('/image',
-        name: 'container_index',
+        name: 'images_all',
         methods: ['GET'])
     ]
-    public function index(ImageService $service): JsonResponse
+    public function index(ImageService $service)
     {
-        return new JsonResponse($service->all(), 200);
+        $content = $this->renderView('images/index.html.twig', [
+            'images' => $service->all()
+        ]);
+
+        return new Response($content, 200);
     }
 
     #[Route('/container/create',
@@ -88,11 +97,36 @@ class ImageController extends AbstractController
 
     }
 
-    #[Route('image/pull', methods: ['POST'])]
-    public function pull(Request $request, ImageService $imageService): JsonResponse
+//    #[Route('images/pull', name: 'images_pull', methods: ['POST'])]
+//    public function pull(Request $request, ImageService $imageService): JsonResponse
+//    {
+//        $imageName = $request->request->get('name');
+//        return new JsonResponse($imageService->pull($imageName), 200);
+//    }
+
+    #[Route('images/pull', name: 'images_pull', methods: ['GET','POST'])]
+    public function createPullRequest(Request $request, EntityManagerInterface $entityManager, ImageService $imageService): Response
     {
-        $imageName = $request->request->get('name');
-        return new JsonResponse($imageService->pull($imageName), 200);
+        $createImage = new CreateImage();
+        $form = $this->createForm(PullImageFormType::class, $createImage);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+
+
+            $result = $imageService->pull($createImage->getFromImage());
+            dd($result);
+
+           // $entityManager->persist($buildImage);
+          //  $entityManager->flush();
+
+            return $this->redirectToRoute('images');
+        }
+
+        return $this->render('images/pull_form.html.twig', [
+            'createImageForm' => $form->createView(),
+        ]);
     }
 
 }

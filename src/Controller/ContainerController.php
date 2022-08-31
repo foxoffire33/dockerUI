@@ -2,20 +2,24 @@
 
 namespace App\Controller;
 
+use DeLaParra\DockerBundle\Services\ContainerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ContainerController extends AbstractController
 {
 
-    #[Route('/container',
-        name: 'container_index',
+    #[Route('/containers',
+        name: 'containers_all',
         methods: ['GET'])
     ]
-    public function index(): string
+    public function index(ContainerService $service): Response
     {
-        return $this->renderView('', []);
+        return $this->render('containers/index.html.twig', [
+            'containers' => $service->getAll()
+        ]);
     }
 
     #[Route('/container/create',
@@ -24,7 +28,19 @@ class ContainerController extends AbstractController
     )]
     public function create(): string
     {
+
+
         return $this->renderView('', []);
+    }
+
+    #[Route('/container/{id}',
+        name: 'container_detail',
+        methods: ['get'],
+    )]
+    public function detail(Request $request, string $id, ContainerService $service)
+    {
+
+        dd($service->inspectContainer($id));
     }
 
     #[Route('/container/{id}/edit',

@@ -8,6 +8,9 @@ use DeLaParra\DockerBundle\DockerBundle;
 use DeLaParra\DockerBundle\Entity\BuildImage;
 use DeLaParra\DockerBundle\Entity\Image;
 use DeLaParra\DockerBundle\Factories\ImageFactory;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class ImageService
 {
@@ -18,7 +21,7 @@ class ImageService
 
     public function all(): array
     {
-        $response = $this->connector->get('images/json');
+        $response = $this->connector->get('/images/json');
         return $response;
     }
 
@@ -26,9 +29,10 @@ class ImageService
     {
         try {
             $image = ImageFactory::pullImage($name);
-            $response = $this->connector->post('build', (array) $image);
-            dd($response);
-            return [];
+            //$response = $this->connector->post('images/create', $image);
+            return $this->connector->post('/containers/create',[
+                "Image" => "php:8.1.0-fpm"
+            ]);
         } catch (\JsonException $exception) {
             return [
                 'status' => 'error',
